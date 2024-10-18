@@ -1,0 +1,48 @@
+from freqtrade.strategy import IStrategy, DecimalParameter
+from pandas import DataFrame
+import talib.abstract as ta
+import numpy as np
+
+class FollowTrendFutures(IStrategy):
+    INTERFACE_VERSION = 3
+    # Parameters for trailing stop loss and trailing take profit
+    trailing_stop_positive = 0.02
+    trailing_stop_positive_offset = 0.03
+    trailing_take_profit_positive = 0.05  # Set a trailing take profit at 5%
+    # Strategy parameters
+    # 5% ROI target
+    minimal_roi = {'0': 0.05}
+    stoploss = -0.15  # Stoploss to avoid errors; not actively used due to trailing stop
+    # Define leverage and stake amount
+    # stake_amount = 10
+    # leverage = 5
+    # Timeframe for strategy
+    timeframe = '1h'  # Changed to 1 hour timeframe; adjust to 4h if preferred
+    can_short: bool = True  # Enable shorting
+    # Plot configuration to display trailing stop loss and trailing take profit
+    # Add trailing stop loss plot
+    # Add trailing take profit plot
+    plot_config = {'main_plot': {'ma_high': {'color': 'green'}, 'ma_low': {'color': 'red'}, 'trailing_stop_loss': {'color': 'red', 'plot_name': 'TRSL'}, 'trailing_take_profit': {'color': 'blue', 'plot_name': 'TRTP'}}, 'subplots': {'Percentage Change': {'percent_change': {'color': 'orange', 'type': 'line'}}}}
+
+    def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        # Calculate moving averages
+        dataframe['ma_high'] = ta.SMA(dataframe['high'], timeperiod=20)
+        dataframe['ma_low'] = ta.SMA(dataframe['low'], timeperiod=20)
+        # Calculate percentage change of each candle
+        dataframe['percent_change'] = dataframe['close'].pct_change() * 100
+        # Calculate trailing stop loss and trailing take profit lines
+        dataframe['trailing_stop_loss'] = dataframe['close'] * (1 - self.trailing_stop_positive)
+        dataframe['trailing_take_profit'] = dataframe['close'] * (1 + self.trailing_take_profit_positive)
+        return dataframe
+
+    def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        # Define entry signals based on recent breakouts and bounces
+        dataframe.loc[dataframe['close'] > dataframe['ma_high'], 'enter_long'] = 1
+        dataframe.loc[dataframe['close'] < dataframe['ma_low'], 'enter_short'] = 1
+        return dataframe
+
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        # Define exit signals when price reverses
+        dataframe.loc[dataframe['close'] < dataframe['ma_high'], 'exit_long'] = 1
+        dataframe.loc[dataframe['close'] > dataframe['ma_low'], 'exit_short'] = 1
+        return dataframe
