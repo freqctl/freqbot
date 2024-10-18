@@ -1,6 +1,6 @@
 # Freqtrade Strategies Repository
 
-This repository is created for **Freqtrade strategies**, focusing on **backtesting**, **hyperoptimization**, and **FreqAI** modes. It includes various strategies developed for both **Binance** and **Bybit** futures trading.
+This repository is created for **Freqtrade strategies**, focusing on **backtesting**, **hyperoptimization**, and **FreqAI** modes. It includes various strategies developed for both **Binance** and **Bybit** futures and spot trading.
 
 ## Key Features:
 - **Backtesting**: Test strategies against historical data to evaluate performance.
