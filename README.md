@@ -1,7 +1,3 @@
-Here’s a simple README template for your repository:
-
----
-
 # Freqtrade Strategies Repository
 
 This repository is created for **Freqtrade strategies**, focusing on **backtesting**, **hyperoptimization**, and **FreqAI** modes. It includes various strategies developed for both **Binance** and **Bybit** futures trading.
@@ -27,5 +23,4 @@ This repository is created for **Freqtrade strategies**, focusing on **backtesti
 ## Contributions:
 Feel free to contribute new strategies or improve existing ones by creating a pull request!
 
----
 
