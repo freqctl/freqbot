@@ -29,4 +29,3 @@ Feel free to contribute new strategies or improve existing ones by creating a pu
 
 ---
 
-This README gives a clear overview of your repository’s purpose and key features. Let me know if you want to make any adjustments!
